@@ -1,3 +1,4 @@
+import os
 from email.message import EmailMessage
 import ssl
 import smtplib
@@ -8,8 +9,8 @@ class Email:
         self.send_to = []
         self.body = ''
         self.subject = subject
-        self.sender = 'dmobley0608@gmail.com'
-        self.google_key = 'tons bame pkmc vgxq'
+        self.sender = os.getenv('GOOGLE_USERNAME')
+        self.google_key = os.getenv("GOOGLE_KEY")
         
     def add_recipient(self, recipient):
         self.send_to.append(recipient)
@@ -25,7 +26,7 @@ class Email:
             em.set_payload(self.body)
             context = ssl.create_default_context()
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-                smtp.login('dmobley0608@gmail.com', self.google_key)
+                smtp.login(os.getenv('GOOGLE_USERNAME'), self.google_key)
                 smtp.sendmail(self.sent_from, self.send_to, em.as_string()) 
             print('Successfully Sent Email')
             return True

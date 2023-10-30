@@ -1,10 +1,13 @@
+from dotenv import load_dotenv
+load_dotenv()
+import os
 import requests
 from classes.horse import Horse
 from classes.record import  Record
 from classes.email import Email
 from datetime import datetime
 import time
-url = 'db.tgdqkumgqyptsqjmlwkf.supabase.co'
+
                 
 
 
@@ -21,7 +24,7 @@ while True:
     print("-"*150)
     print(f"Checking Records current time is {datetime.now()}")  
     #Fetch Data   
-    r = requests.get('https://ddcattle.company/api/horses')
+    r = requests.get(os.getenv('REQUEST_URL'))
     data = r.json()
     print(f'Record Check Complete')
     for horse in data:
@@ -58,8 +61,8 @@ while True:
     # Send Email with results   
     if len(coggins) > 0 or len(rabies) > 0 or len(worming) > 0 or len(vaccines) > 0:
         email = Email("Vaccination/Worming Status")
-        email.add_recipient('dmobley0608@gmail.com')
-        email.add_recipient('djones@hallcounty.org')
+        email.add_recipient(os.getenv('EMAIL_1'))
+        email.add_recipient(os.getenv('EMAIL_2'))
         email.set_body_for_vaccines(coggins, rabies, vaccines, worming)
         email.send_email()
     else:
