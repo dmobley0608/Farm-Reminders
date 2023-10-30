@@ -12,7 +12,8 @@ url = 'db.tgdqkumgqyptsqjmlwkf.supabase.co'
 
 while True: 
     count = 0   
-    horses = []    
+    horses = []
+    records = []
     worming = []
     coggins = []
     vaccines = []
@@ -29,17 +30,27 @@ while True:
     #Check Record Dates
     for horse in horses: 
         #Check For Coggins
-        count += len(horse.records)
-        records = horse.check_records()
-        coggins.append(records.get('coggins') or  )
-        rabies.append(records.get('rabies'))
-        vaccines.append(records.get('vaccines'))
-        worming.append(records.get('wormed'))
-    print(coggins)
+        needs_coggins = horse.check_coggins()
+        if needs_coggins:        
+            coggins.append(needs_coggins)
+       
+        #Check Rabies Status
+        needs_rabies = horse.check_yearly('rabies')
+        if needs_rabies:
+            rabies.append(needs_rabies)
+        
+        #Check Wormed Status
+        needs_wormed = horse.check_quarterly('wormed')
+        if needs_wormed:
+            worming.append(needs_wormed)
+            
+        #Check Yearly Vaccines
+        needs_yearly = horse.check_yearly('yearly_vaccines')
+        if needs_yearly:
+            vaccines.append(needs_yearly) 
   
    
     #Print status
-    print(f'Checked {count} Records')
     print(f'{len(coggins)} - Horses Need Coggins')
     print(f'{len(worming)} - Horses Need To Be Wormed')
     print(f'{len(vaccines)} - Horses Need Yearly Vaccines')
@@ -49,10 +60,8 @@ while True:
         email = Email("Vaccination/Worming Status")
         email.add_recipient('dmobley0608@gmail.com')
         email.add_recipient('djones@hallcounty.org')
-        # email.set_body_for_vaccines(coggins, rabies, vaccines, worming)
-        # email.send_email()
-        print(email.body)
-        
+        email.set_body_for_vaccines(coggins, rabies, vaccines, worming)
+        email.send_email()
     else:
         print("All records up to date")
     print("Going To Sleep. I will check again tomorrow!")
