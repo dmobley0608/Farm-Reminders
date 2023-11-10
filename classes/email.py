@@ -37,27 +37,37 @@ class Email:
             print('Error Sending Message')
             return False
         
-    def set_body_for_vaccines(self, coggins, rabies, vaccines, worming):
-          self.body = f"""
+    def set_body_for_vaccines(self, coggins, rabies, vaccines, worming, trimmed):
+        self.body = f"""
             <img src='https://ddcattle.company/static/media/ddc.b51fd10ab57a812f22d9.png' width='200px'/>
             <h1>Vaccination Status and Worming Updates</h1>
-            <h2>The following horses need to be wormed:</h2>
+            """
+        if len(worming) > 0:
+            self.body += f"""<h2>The following horses need to be wormed:</h2>
             <ol>
             <li>
                 {'<li>'.join(worming)}
             </ol>
-            <hr>
+            """
+        if len(coggins) > 0:
+            self.body += f"""<hr>
             <h2>The following horses need Coggins pulled:</h2>
             <ol>
             <li>
                 {'<li>'.join(coggins)}
             </ol>
+            """
+        if len(rabies) > 0:
+            self.body +=f"""
             <hr>
             <h2>The following horses need rabies shots:</h2>
             <ol>
             <li>
                 {'<li>'.join(rabies)}
             </ol>
+            """
+        if len(vaccines) > 0:
+            self.body += f"""
             <hr>
             <h2>The following horses need yearly vaccines:</h2>
             <ol>
@@ -65,4 +75,12 @@ class Email:
                 {'<li>'.join(vaccines)}
             </ol>
             <hr>
-        """
+            """
+        if len(trimmed) > 0:
+            self.body += f"""
+            <h2>The following horses need to be trimmed:</h2>
+            <ol>
+            <li>
+                {'<li>'.join(trimmed)}
+            </ol>
+            """

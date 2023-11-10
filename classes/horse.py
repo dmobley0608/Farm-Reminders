@@ -43,7 +43,16 @@ class Horse:
         elif len(records) == 0:
             return f'{self.name} - No {vaccine.capitalize()} on record.'
         
-    
+    def check_trimmed(self):
+        records = list(filter(lambda record: record['trimmed'] == True, self.records))
+        if not records: return f"No trimming record for {self.name}"
+        else:
+            record_date = datetime.strptime(records[0].get("date"), '%Y-%m-%d')
+            last_trim = relativedelta(datetime.now(), record_date)           
+            if last_trim.months >= 2:
+                return f"{self.name} last trim was {records[0].get('date')}"
+           
+            
     def __str__(self) -> str:
         return self.name
         
